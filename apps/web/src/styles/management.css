@@ -1,0 +1,513 @@
+.management-shell {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 218px minmax(0, 1fr);
+  color: #293027;
+  background: #f6f8f4;
+}
+
+.management-sidebar {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  padding: 22px 14px 17px;
+  border-right: 1px solid #e3e7df;
+  background: #fbfcfa;
+}
+
+.management-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 8px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.management-brand-mark {
+  width: 31px;
+  height: 31px;
+  grid-template-columns: repeat(2, 5px);
+  grid-template-rows: repeat(2, 5px);
+  gap: 2px;
+  border-radius: 9px;
+}
+
+.management-brand strong {
+  font-size: 12px;
+}
+
+.management-brand small {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #8b9188;
+  font-size: 7px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scope-card {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 24px 0 20px;
+  padding: 11px;
+  border: 1px solid #e2e7dd;
+  border-radius: 10px;
+  color: #5a6554;
+  background: #f7faf4;
+}
+
+.scope-card div {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.scope-card span {
+  color: #91968f;
+  font-size: 7px;
+}
+
+.scope-card strong {
+  margin-top: 2px;
+  overflow: hidden;
+  font-size: 9px;
+  text-overflow: ellipsis;
+}
+
+.management-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.management-sidebar nav p {
+  margin: 8px 10px 6px;
+  color: #a0a59d;
+  font-size: 7px;
+  font-weight: 750;
+  letter-spacing: 0.11em;
+}
+
+.management-sidebar nav a {
+  display: flex;
+  height: 34px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: #697067;
+  font-size: 9px;
+  text-decoration: none;
+}
+
+.management-sidebar nav a.active {
+  color: #26331f;
+  background: #eaf8dc;
+  font-weight: 700;
+}
+
+.management-logout {
+  display: flex;
+  height: 34px;
+  align-items: center;
+  gap: 9px;
+  margin-top: auto;
+  padding: 0 10px;
+  border: 0;
+  color: #8d5e5b;
+  background: transparent;
+  font-size: 9px;
+  cursor: pointer;
+}
+
+.management-main {
+  min-width: 0;
+}
+
+.management-topbar {
+  display: flex;
+  height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  border-bottom: 1px solid #e4e8e0;
+  background: rgb(255 255 255 / 85%);
+}
+
+.management-topbar > span {
+  color: #7d847a;
+  font-size: 9px;
+}
+
+.management-topbar > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.management-topbar > div > span:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.management-topbar strong {
+  font-size: 9px;
+}
+
+.management-topbar small {
+  margin-top: 2px;
+  color: #92978f;
+  font-size: 7px;
+}
+
+.management-avatar {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 9px;
+  color: #244017;
+  background: #b7ef82;
+  font-size: 8px;
+  font-weight: 750;
+}
+
+.management-content {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 31px 34px 50px;
+}
+
+.management-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.management-heading > div > span {
+  color: #68a733;
+  font-size: 8px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.management-heading h1 {
+  margin: 6px 0 5px;
+  font-size: 27px;
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+
+.management-heading p {
+  margin: 0;
+  color: #858b82;
+  font-size: 10px;
+}
+
+.management-primary-button,
+.management-secondary-button {
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 9px;
+  font-size: 9px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.management-primary-button {
+  color: #21311a;
+  background: #a6ed63;
+  box-shadow: 0 6px 14px rgb(125 188 68 / 15%);
+}
+
+.management-secondary-button {
+  border: 1px solid #dde2d9;
+  color: #626960;
+  background: #fff;
+}
+
+.management-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 13px;
+}
+
+.management-toolbar label,
+.management-toolbar button {
+  display: flex;
+  height: 34px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 11px;
+  border: 1px solid #e0e5dc;
+  border-radius: 8px;
+  color: #747b72;
+  background: #fff;
+  font-size: 9px;
+}
+
+.management-toolbar label {
+  width: 230px;
+}
+
+.management-toolbar input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 9px;
+}
+
+.management-table-card,
+.management-form-card {
+  overflow: hidden;
+  border: 1px solid #e2e6de;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 6px 24px rgb(42 54 36 / 4%);
+}
+
+.management-table-card table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.management-table-card th,
+.management-table-card td {
+  height: 48px;
+  padding: 0 17px;
+  border-bottom: 1px solid #edf0eb;
+  color: #646b62;
+  font-size: 9px;
+  text-align: left;
+}
+
+.management-table-card th {
+  height: 40px;
+  color: #8a9087;
+  background: #fafbf9;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.organization-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.organization-cell > i {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  border-radius: 8px;
+  color: #5f962e;
+  background: #eff9e7;
+}
+
+.organization-cell > span {
+  display: flex;
+  flex-direction: column;
+}
+
+.organization-cell strong {
+  color: #343a32;
+  font-size: 9px;
+}
+
+.organization-cell small {
+  margin-top: 2px;
+  color: #969b94;
+  font-size: 7px;
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 5px 7px;
+  border-radius: 999px;
+  font-size: 7px;
+  font-weight: 750;
+}
+
+.status-badge.active {
+  color: #4e8425;
+  background: #eef9e5;
+}
+
+.status-badge.pending,
+.status-badge.invited {
+  color: #9a7428;
+  background: #fff7dd;
+}
+
+.status-badge.suspended {
+  color: #ad514c;
+  background: #fff0ef;
+}
+
+.status-badge.archived {
+  color: #757a73;
+  background: #eff1ee;
+}
+
+.management-empty {
+  display: flex;
+  min-height: 190px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #8c9289;
+  font-size: 8px;
+}
+
+.management-empty strong {
+  color: #555c53;
+  font-size: 10px;
+}
+
+.management-empty.error {
+  color: #ae5b56;
+}
+
+.management-form-card {
+  max-width: 760px;
+  padding: 25px;
+}
+
+.management-form-card.compact {
+  max-width: 680px;
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  color: #5a8f2d;
+}
+
+.form-section-title.divided {
+  margin-top: 27px;
+  padding-top: 23px;
+  border-top: 1px solid #edf0ea;
+}
+
+.form-section-title > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-section-title strong {
+  color: #3e453c;
+  font-size: 10px;
+}
+
+.form-section-title span {
+  margin-top: 3px;
+  color: #91978e;
+  font-size: 8px;
+}
+
+.management-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.management-form-grid label {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.management-form-grid label.full {
+  grid-column: 1 / -1;
+}
+
+.management-form-grid label > span {
+  color: #626960;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.management-form-grid input,
+.management-form-grid select {
+  width: 100%;
+  height: 40px;
+  padding: 0 11px;
+  border: 1px solid #dfe4dc;
+  border-radius: 8px;
+  outline: 0;
+  color: #3d443b;
+  background: #fff;
+  font-size: 9px;
+}
+
+.management-form-grid input:focus,
+.management-form-grid select:focus {
+  border-color: #9bd85f;
+  box-shadow: 0 0 0 3px rgb(151 222 87 / 11%);
+}
+
+.management-input-icon {
+  position: relative;
+}
+
+.management-input-icon svg {
+  position: absolute;
+  top: 12px;
+  left: 11px;
+  color: #91978e;
+}
+
+.management-input-icon input {
+  padding-left: 37px;
+}
+
+.management-form-card .form-submit {
+  margin-top: 24px;
+  padding: 0 17px;
+}
+
+@media (max-width: 760px) {
+  .management-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .management-sidebar {
+    display: none;
+  }
+
+  .management-content {
+    padding: 24px 18px;
+  }
+
+  .management-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .management-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .management-form-grid label.full {
+    grid-column: auto;
+  }
+}
