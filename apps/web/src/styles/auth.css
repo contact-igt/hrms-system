@@ -475,6 +475,48 @@
   text-align: center;
 }
 
+.platform-login-link {
+  margin-top: 18px;
+  color: #8a9087;
+  font-size: 9px;
+  text-align: center;
+}
+
+.platform-login-link a {
+  color: #548e26;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.platform-access-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 24px;
+  padding: 12px;
+  border: 1px solid #dce9d2;
+  border-radius: 9px;
+  color: #58882f;
+  background: #f5fbed;
+}
+
+.platform-access-notice div {
+  display: flex;
+  flex-direction: column;
+}
+
+.platform-access-notice strong {
+  color: #3f5630;
+  font-size: 9px;
+}
+
+.platform-access-notice span {
+  margin-top: 3px;
+  color: #7c8874;
+  font-size: 8px;
+  line-height: 1.45;
+}
+
 .auth-card-footer p {
   margin: 0;
 }

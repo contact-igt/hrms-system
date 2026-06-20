@@ -16,7 +16,13 @@ export function ProtectedRoute({ scope }: { scope: AuthScope }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
+    return (
+      <Navigate
+        to={scope === "PLATFORM" ? "/platform/login" : "/login"}
+        state={{ from: location.pathname }}
+        replace
+      />
+    );
   }
 
   if (user.scopeType !== scope) {

@@ -1,0 +1,28 @@
+{
+  "name": "hrms-project",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "npm run dev --workspace @hrms/web",
+    "dev:api": "npm run dev --workspace @hrms/api",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "db:generate": "npm run db:generate --workspace @hrms/api",
+    "db:migrate": "npm run db:migrate --workspace @hrms/api",
+    "bootstrap:platform": "npm run bootstrap:platform --workspace @hrms/api"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.4.0",
+    "react-hook-form": "^7.80.0",
+    "react-router-dom": "^7.18.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3",
+    "drizzle-orm": "^0.45.2"
+  }
+}

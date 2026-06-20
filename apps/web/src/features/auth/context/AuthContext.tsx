@@ -20,7 +20,10 @@ type AuthContextValue = {
   accessToken: string | null;
   user: AuthUser | null;
   initializing: boolean;
-  login: (input: LoginInput) => Promise<AuthUser>;
+  organizationLogin: (input: LoginInput) => Promise<AuthUser>;
+  platformLogin: (
+    input: Pick<LoginInput, "email" | "password">,
+  ) => Promise<AuthUser>;
   acceptSession: (session: AuthSession) => void;
   logout: () => Promise<void>;
 };
@@ -61,11 +64,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const login = useCallback(async (input: LoginInput) => {
-    const nextSession = await authApi.login(input);
+  const organizationLogin = useCallback(async (input: LoginInput) => {
+    const nextSession = await authApi.organizationLogin(input);
     setSession(nextSession);
     return nextSession.user;
   }, []);
+
+  const platformLogin = useCallback(
+    async (input: Pick<LoginInput, "email" | "password">) => {
+      const nextSession = await authApi.platformLogin(input);
+      setSession(nextSession);
+      return nextSession.user;
+    },
+    [],
+  );
 
   const logout = useCallback(async () => {
     const token = session?.accessToken ?? null;
@@ -78,11 +90,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       accessToken: session?.accessToken ?? null,
       user: session?.user ?? null,
       initializing,
-      login,
+      organizationLogin,
+      platformLogin,
       acceptSession,
       logout,
     }),
-    [acceptSession, initializing, login, logout, session],
+    [
+      acceptSession,
+      initializing,
+      logout,
+      organizationLogin,
+      platformLogin,
+      session,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

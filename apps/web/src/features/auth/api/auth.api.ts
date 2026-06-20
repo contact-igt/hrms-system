@@ -51,8 +51,15 @@ export async function apiRequest<T>(
 }
 
 export const authApi = {
-  login(input: LoginInput) {
-    return apiRequest<AuthSession>("/auth/login", {
+  organizationLogin(input: LoginInput) {
+    return apiRequest<AuthSession>("/auth/organization/login", {
+      method: "POST",
+      body: JSON.stringify(input),
+    });
+  },
+
+  platformLogin(input: Pick<LoginInput, "email" | "password">) {
+    return apiRequest<AuthSession>("/auth/platform/login", {
       method: "POST",
       body: JSON.stringify(input),
     });

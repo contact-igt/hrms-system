@@ -8,7 +8,16 @@ const passwordSchema = z
 export const loginSchema = z.object({
   email: z.email("Enter a valid email address."),
   password: z.string().min(1, "Password is required."),
-  organizationCode: z.string().trim().max(20).optional(),
+  organizationCode: z
+    .string()
+    .trim()
+    .min(2, "Organization code is required.")
+    .max(20),
+});
+
+export const platformLoginSchema = z.object({
+  email: z.email("Enter a valid platform email address."),
+  password: z.string().min(1, "Password is required."),
 });
 
 export const registerSchema = z
@@ -44,6 +53,7 @@ export const otpSchema = z.object({
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
+export type PlatformLoginFormValues = z.infer<typeof platformLoginSchema>;
 export type RegisterFormValues = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;

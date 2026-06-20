@@ -3,6 +3,7 @@ import { AuthProvider } from "../features/auth/context/AuthContext";
 import { ProtectedRoute } from "../features/auth/components/ProtectedRoute";
 import { ForgotPasswordPage } from "../features/auth/pages/ForgotPasswordPage";
 import { LoginPage } from "../features/auth/pages/LoginPage";
+import { PlatformLoginPage } from "../features/auth/pages/PlatformLoginPage";
 import { RegisterPage } from "../features/auth/pages/RegisterPage";
 import { ResetPasswordPage } from "../features/auth/pages/ResetPasswordPage";
 import { SsoCallbackPage } from "../features/auth/pages/SsoCallbackPage";
@@ -21,6 +22,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/platform/login" element={<PlatformLoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-otp" element={<VerifyOtpPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />

@@ -1,21 +1,20 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Building2, LockKeyhole, Mail } from "lucide-react";
+import { LockKeyhole, Mail, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ApiError } from "../api/auth.api";
 import { AuthLayout } from "../components/AuthLayout";
 import { FormField } from "../components/FormField";
-import { SsoButtons } from "../components/SsoButtons";
 import { SubmitButton } from "../components/SubmitButton";
 import { useAuth } from "../context/AuthContext";
 import {
-  loginSchema,
-  type LoginFormValues,
+  platformLoginSchema,
+  type PlatformLoginFormValues,
 } from "../schemas/auth.schemas";
 
-export function LoginPage() {
-  const { organizationLogin } = useAuth();
+export function PlatformLoginPage() {
+  const { platformLogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [serverError, setServerError] = useState("");
@@ -23,57 +22,65 @@ export function LoginPage() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      organizationCode: "",
-    },
+  } = useForm<PlatformLoginFormValues>({
+    resolver: zodResolver(platformLoginSchema),
+    defaultValues: { email: "", password: "" },
   });
 
   const submit = handleSubmit(async (values) => {
     setServerError("");
     try {
-      const user = await organizationLogin(values);
+      const user = await platformLogin(values);
+
+      if (user.scopeType !== "PLATFORM") {
+        setServerError("This account does not have platform access.");
+        return;
+      }
+
       const requestedPath = (
         location.state as { from?: string } | null
       )?.from;
-      const destination =
-        requestedPath ??
-        (user.scopeType === "PLATFORM"
-          ? "/platform/organizations"
-          : "/projects");
-      navigate(destination, { replace: true });
+      navigate(requestedPath ?? "/platform/organizations", { replace: true });
     } catch (error) {
       setServerError(
         error instanceof ApiError
           ? error.message
-          : "Unable to sign in. Please try again.",
+          : "Unable to sign in to the platform.",
       );
     }
   });
 
   return (
     <AuthLayout
-      eyebrow="Organization access"
-      title="Sign in to your organization"
-      description="Enter your organization code and employee credentials."
+      eyebrow="Platform administration"
+      title="Platform Super Admin"
+      description="Securely sign in to create and manage organizations."
       footer={
         <p>
-          Have an employee invitation? <Link to="/register">Activate account</Link>
+          Organization member? <Link to="/login">Organization login</Link>
         </p>
       }
     >
+      <div className="platform-access-notice">
+        <ShieldCheck size={18} />
+        <div>
+          <strong>Restricted platform access</strong>
+          <span>
+            Platform accounts are created only through the secure bootstrap
+            process.
+          </span>
+        </div>
+      </div>
+
       <form className="auth-form" onSubmit={submit}>
         {serverError && <div className="form-alert">{serverError}</div>}
 
         <div className="field-with-icon">
           <Mail size={16} />
           <FormField
-            label="Work email"
+            label="Platform email"
             type="email"
-            placeholder="you@company.com"
+            placeholder="admin@platform.com"
             autoComplete="email"
             registration={register("email")}
             error={errors.email}
@@ -92,32 +99,15 @@ export function LoginPage() {
           />
         </div>
 
-        <div className="field-with-icon">
-          <Building2 size={16} />
-          <FormField
-            label="Organization code"
-            placeholder="Example: ACME"
-            autoCapitalize="characters"
-            registration={register("organizationCode")}
-            error={errors.organizationCode}
-          />
-        </div>
-
         <div className="auth-form-meta">
-          <label>
-            <input type="checkbox" /> Keep me signed in
-          </label>
+          <span />
           <Link to="/forgot-password">Forgot password?</Link>
         </div>
 
-        <SubmitButton loading={isSubmitting}>Sign in securely</SubmitButton>
+        <SubmitButton loading={isSubmitting}>
+          Open platform workspace
+        </SubmitButton>
       </form>
-
-      <SsoButtons />
-
-      <div className="platform-login-link">
-        Platform administrator? <Link to="/platform/login">Platform login</Link>
-      </div>
     </AuthLayout>
   );
 }
