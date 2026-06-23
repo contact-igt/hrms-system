@@ -295,6 +295,15 @@
   text-align: left;
 }
 
+.management-table-card .clickable-row {
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.management-table-card .clickable-row:hover {
+  background-color: #f6faef;
+}
+
 .management-table-card th {
   height: 40px;
   color: #8a9087;

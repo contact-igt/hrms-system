@@ -53,7 +53,7 @@ export function PlatformLoginPage() {
   return (
     <AuthLayout
       eyebrow="Platform administration"
-      title="Platform Super Admin"
+      title="Platform Admin"
       description="Securely sign in to create and manage organizations."
       footer={
         <p>

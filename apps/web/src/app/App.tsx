@@ -13,6 +13,7 @@ import { OrganizationSetupPage } from "../features/organizations/pages/Organizat
 import { InviteEmployeePage } from "../features/organizations/pages/InviteEmployeePage";
 import { CreateOrganizationPage } from "../features/platform/pages/CreateOrganizationPage";
 import { OrganizationsPage } from "../features/platform/pages/OrganizationsPage";
+import { OrganizationDetailsPage } from "../features/platform/pages/OrganizationDetailsPage";
 import { ProjectsPage } from "../features/projects/pages/ProjectsPage";
 
 export default function App() {
@@ -46,6 +47,10 @@ export default function App() {
             <Route
               path="/platform/organizations"
               element={<OrganizationsPage />}
+            />
+            <Route
+              path="/platform/organizations/:id"
+              element={<OrganizationDetailsPage />}
             />
             <Route
               path="/platform/organizations/new"

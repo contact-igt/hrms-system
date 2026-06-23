@@ -1,6 +1,6 @@
 import { Building2, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ManagementShell } from "../../../components/ManagementShell";
 import { useAuth } from "../../auth/context/AuthContext";
 import {
@@ -10,6 +10,7 @@ import {
 
 export function OrganizationsPage() {
   const { accessToken } = useAuth();
+  const navigate = useNavigate();
   const [organizations, setOrganizations] = useState<OrganizationRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -63,11 +64,16 @@ export function OrganizationsPage() {
               <th>Domain</th>
               <th>Members</th>
               <th>Status</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {organizations.map((organization) => (
-              <tr key={organization.id}>
+              <tr 
+                key={organization.id} 
+                onClick={() => navigate(`/platform/organizations/${organization.id}`)}
+                className="clickable-row"
+              >
                 <td>
                   <span className="organization-cell">
                     <i>
@@ -83,6 +89,38 @@ export function OrganizationsPage() {
                   <span className={`status-badge ${organization.status.toLowerCase()}`}>
                     {organization.status}
                   </span>
+                </td>
+                <td className="action-cell">
+                  <button
+                    className="management-secondary-button"
+                    onClick={() => {
+                      const email = window.prompt('Enter admin email to invite:');
+                      if (!email) return;
+                      platformApi.inviteOrganizationAdmin(
+                        organization.id,
+                        { firstName: 'First', lastName: 'Last', email },
+                        accessToken,
+                      ).then(() => alert('Invitation sent'))
+                        .catch(err => alert('Failed: ' + (err instanceof Error ? err.message : String(err))));
+                    }}
+                  >
+                    Invite
+                  </button>
+                  <button
+                    className="management-secondary-button ml-2"
+                    onClick={() => {
+                      const email = window.prompt('Resend invitation to email:');
+                      if (!email) return;
+                      platformApi.inviteOrganizationAdmin(
+                        organization.id,
+                        { firstName: 'First', lastName: 'Last', email },
+                        accessToken,
+                      ).then(() => alert('Invitation resent'))
+                        .catch(err => alert('Failed: ' + (err instanceof Error ? err.message : String(err))));
+                    }}
+                  >
+                    Resend
+                  </button>
                 </td>
               </tr>
             ))}

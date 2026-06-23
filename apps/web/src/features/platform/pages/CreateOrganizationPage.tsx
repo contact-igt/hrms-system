@@ -33,8 +33,9 @@ export function CreateOrganizationPage() {
         accessToken,
       );
       navigate("/platform/organizations");
-    } catch {
-      setError("The organization could not be created.");
+    } catch (error: any) {
+      const message = error?.message || 'The organization could not be created.';
+      setError(message);
     } finally {
       setSubmitting(false);
     }

@@ -29,12 +29,30 @@ export const platformApi = {
     );
   },
 
+  getOrganization(id: string, accessToken: string) {
+    return apiRequest<OrganizationRecord>(
+      `/platform/organizations/${id}`,
+      {},
+      accessToken,
+    );
+  },
+
   createOrganization(input: CreateOrganizationInput, accessToken: string) {
     return apiRequest<OrganizationRecord>(
       "/platform/organizations",
       {
         method: "POST",
         body: JSON.stringify(input),
+      },
+      accessToken,
+    );
+  },
+  inviteOrganizationAdmin(organizationId: string, admin: {firstName: string; lastName: string; email: string}, accessToken: string) {
+    return apiRequest<any>(
+      `/platform/organizations/${organizationId}/admin-invitations`,
+      {
+        method: "POST",
+        body: JSON.stringify(admin),
       },
       accessToken,
     );
