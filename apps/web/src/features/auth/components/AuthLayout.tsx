@@ -53,7 +53,7 @@ export function AuthLayout({
           <div className="access-map">
             <AccessLevel
               icon={ShieldCheck}
-              title="Platform Super Admin"
+              title="Platform Admin"
               text="Creates and manages organizations"
             />
             <span className="access-line" />

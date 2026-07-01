@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "516e0176-c6a9-4701-87b0-5ce96986d7bb",
+  "id": "1ac8fd54-3adb-462a-a3f0-72ebfe16644d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "audit_logs": {
@@ -395,16 +395,24 @@
           "notNull": true,
           "autoincrement": false
         },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(now())"
+        },
         "expires_at": {
           "name": "expires_at",
-          "type": "timestamp",
+          "type": "datetime",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
         "accepted_at": {
           "name": "accepted_at",
-          "type": "timestamp",
+          "type": "datetime",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
@@ -415,14 +423,6 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "(now())"
         }
       },
       "indexes": {
@@ -749,20 +749,6 @@
           "autoincrement": false,
           "default": 5
         },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "consumed_at": {
-          "name": "consumed_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -770,6 +756,20 @@
           "notNull": true,
           "autoincrement": false,
           "default": "(now())"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "consumed_at": {
+          "name": "consumed_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -839,20 +839,6 @@
           "notNull": true,
           "autoincrement": false
         },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "used_at": {
-          "name": "used_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -860,6 +846,20 @@
           "notNull": true,
           "autoincrement": false,
           "default": "(now())"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "used_at": {
+          "name": "used_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -1196,27 +1196,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "expires_at": {
-          "name": "expires_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "last_used_at": {
-          "name": "last_used_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "revoked_at": {
-          "name": "revoked_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -1224,6 +1203,27 @@
           "notNull": true,
           "autoincrement": false,
           "default": "(now())"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "last_used_at": {
+          "name": "last_used_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {
@@ -1340,42 +1340,6 @@
           "autoincrement": false,
           "default": "'INVITED'"
         },
-        "email_verified_at": {
-          "name": "email_verified_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "password_changed_at": {
-          "name": "password_changed_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "failed_login_attempts": {
-          "name": "failed_login_attempts",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "locked_until": {
-          "name": "locked_until",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "last_login_at": {
-          "name": "last_login_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -1392,6 +1356,42 @@
           "autoincrement": false,
           "onUpdate": true,
           "default": "(now())"
+        },
+        "email_verified_at": {
+          "name": "email_verified_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "password_changed_at": {
+          "name": "password_changed_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "failed_login_attempts": {
+          "name": "failed_login_attempts",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "locked_until": {
+          "name": "locked_until",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_login_at": {
+          "name": "last_login_at",
+          "type": "datetime",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {

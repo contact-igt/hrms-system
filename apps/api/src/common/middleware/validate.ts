@@ -17,12 +17,22 @@ export function validate(schema: ZodType<RequestShape>) {
     });
 
     if (!result.success) {
+      // Extract field-level errors from Zod issues, stripping the outer "body" path segment.
+      const errors: Array<{ field: string; message: string }> = result.error.issues.map(
+        (issue) => {
+          const path = issue.path.filter((segment) => segment !== "body");
+          return {
+            field: path.join(".") || "_form",
+            message: issue.message,
+          };
+        },
+      );
       next(
         new AppError(
           422,
           "Validation failed.",
           "VALIDATION_ERROR",
-          result.error.flatten(),
+          errors,
         ),
       );
       return;

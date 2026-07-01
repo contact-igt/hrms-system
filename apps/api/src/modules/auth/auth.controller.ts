@@ -15,6 +15,7 @@ import {
   verifyEmailOtp,
   verifyOtpLogin,
   verifyPasswordResetOtp,
+  getInvitationByToken,
 } from "./auth.service.js";
 
 export const authController = {
@@ -102,6 +103,16 @@ export const authController = {
       request.cookies[env.REFRESH_COOKIE_NAME],
       response,
     );
+    if (!data) {
+      response.clearCookie(env.REFRESH_COOKIE_NAME, {
+        httpOnly: true,
+        secure: env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/api/v1/auth",
+      });
+      sendSuccess(response, null, "No active session.");
+      return;
+    }
     sendSuccess(response, data, "Session refreshed.");
   },
 
@@ -120,6 +131,11 @@ export const authController = {
 
   async me(request: Request, response: Response) {
     sendSuccess(response, request.auth, "Current access context.");
+  },
+
+  async getInvitation(request: Request, response: Response) {
+    const data = await getInvitationByToken(request.params.token as string);
+    sendSuccess(response, data, "Invitation retrieved successfully.");
   },
 
   providers(_request: Request, response: Response) {

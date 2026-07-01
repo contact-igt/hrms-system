@@ -1,7 +1,7 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
 import { env } from "../../config/env.js";
 import { db } from "../../database/client.js";
-import { otpChallenges } from "../../database/schema/index.js";
+import { otpChallenges } from "../../database/index.js";
 import { AppError } from "../../common/errors/app-error.js";
 import {
   createId,

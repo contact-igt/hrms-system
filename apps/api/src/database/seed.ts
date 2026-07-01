@@ -11,7 +11,7 @@ import {
   permissions,
   rolePermissions,
   roles,
-} from "./schema/index.js";
+} from "./index.js";
 
 export async function seedRbac() {
   const permissionIds = new Map<string, string>();

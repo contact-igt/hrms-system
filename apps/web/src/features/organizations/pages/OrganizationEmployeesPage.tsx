@@ -1,36 +1,33 @@
 import { Plus, Search, UserRound, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { ManagementShell } from "../../../components/ManagementShell";
 import { useAuth } from "../../auth/context/AuthContext";
 import {
   organizationApi,
   type OrganizationMember,
 } from "../api/organization.api";
+import { InviteEmployeeDrawer } from "../components/InviteEmployeeDrawer";
 
 export function OrganizationEmployeesPage() {
   const { accessToken } = useAuth();
   const [members, setMembers] = useState<OrganizationMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showInviteDrawer, setShowInviteDrawer] = useState(false);
 
-  useEffect(() => {
+  const load = () => {
     if (!accessToken) return;
-    let active = true;
+    setLoading(true);
     organizationApi
       .listMembers(accessToken)
-      .then((records) => {
-        if (active) setMembers(records);
-      })
-      .catch(() => {
-        if (active) setError("Employees could not be loaded.");
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
+      .then(setMembers)
+      .catch(() => setError("Employees could not be loaded."))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accessToken]);
 
   return (
@@ -39,12 +36,13 @@ export function OrganizationEmployeesPage() {
       title="Employees"
       description="Onboard employees and manage organization-level access."
       action={
-        <Link
+        <button
           className="management-primary-button"
-          to="/organization/employees/invite"
+          type="button"
+          onClick={() => setShowInviteDrawer(true)}
         >
           <Plus size={16} /> Invite employee
-        </Link>
+        </button>
       }
     >
       <div className="management-toolbar">
@@ -101,6 +99,14 @@ export function OrganizationEmployeesPage() {
           </div>
         )}
       </div>
+
+      {showInviteDrawer && (
+        <div className="drawer-overlay active" onClick={() => setShowInviteDrawer(false)}>
+          <div className="drawer open" onClick={(e) => e.stopPropagation()}>
+            <InviteEmployeeDrawer onClose={() => setShowInviteDrawer(false)} refresh={load} />
+          </div>
+        </div>
+      )}
     </ManagementShell>
   );
 }

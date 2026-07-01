@@ -373,6 +373,11 @@
   background: #eff1ee;
 }
 
+.status-badge.not_invited {
+  color: #555c53;
+  background: #f0f3ef;
+}
+
 .management-empty {
   display: flex;
   min-height: 190px;
@@ -519,4 +524,446 @@
   .management-form-grid label.full {
     grid-column: auto;
   }
+}
+
+/* Drawer overlay and sliding drawer */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  z-index: 999;
+}
+
+.drawer-overlay.active {
+  display: block;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 30%;
+  max-width: 100%;
+  height: 100vh;
+  background: #fff;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-out;
+  z-index: 1000;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Drawer header: title + close button */
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: 22px 28px 20px;
+  border-bottom: 1px solid #e8ebe4;
+  background: #fff;
+}
+
+.drawer-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  color: #1e251c;
+}
+
+.drawer-close-btn {
+  display: grid;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid #e3e7de;
+  border-radius: 8px;
+  color: #6b7268;
+  background: #f8faf5;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.drawer-close-btn:hover {
+  background: #eef5e7;
+  color: #2e3d28;
+}
+
+/* Drawer scrollable body */
+.drawer-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 28px 32px;
+}
+
+.drawer-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 28px;
+  border-top: 1px solid #edf0ea;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.drawer-form-actions--left {
+  justify-content: flex-start;
+}
+
+/* Custom Delete Confirmation Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(12, 17, 10, 0.45);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px;
+}
+
+.confirm-modal-card {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 440px;
+  padding: 32px 28px 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border: 1px solid #e3e7de;
+  animation: modal-fade-in 0.2s ease-out;
+}
+
+@keyframes modal-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.confirm-modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid #e3e7de;
+  border-radius: 6px;
+  color: #6b7268;
+  background: #f8faf5;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.confirm-modal-close-btn:hover {
+  background: #eef5e7;
+  color: #2e3d28;
+}
+
+.confirm-modal-icon-wrap {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff0ef;
+  color: #d32f2f;
+  margin-bottom: 20px;
+}
+
+.confirm-modal-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 650;
+  color: #1e251c;
+  line-height: 1.4;
+}
+
+.confirm-modal-text {
+  margin: 0 0 24px;
+  font-size: 11px;
+  color: #6b7268;
+  line-height: 1.5;
+}
+
+.confirm-modal-actions {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+
+.confirm-modal-btn-danger {
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: #d32f2f;
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.confirm-modal-btn-danger:hover {
+  opacity: 0.9;
+}
+
+.confirm-modal-btn-danger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.confirm-modal-btn-secondary {
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  border: 1px solid #dde2d9;
+  border-radius: 8px;
+  color: #626960;
+  background: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.confirm-modal-btn-secondary:hover {
+  background-color: #f8faf5;
+}
+
+.confirm-modal-btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .confirm-modal-actions {
+    flex-direction: column;
+  }
+}
+
+.action-icons-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.action-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 6px;
+  margin: 0;
+  cursor: pointer;
+  color: #6b7268;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.action-icon-btn:hover {
+  color: #4e8425;
+  background-color: rgba(78, 132, 37, 0.08);
+}
+
+.action-icon-btn--danger {
+  color: #ad514c;
+}
+
+.action-icon-btn--danger:hover {
+  color: #d32f2f;
+  background-color: rgba(211, 47, 47, 0.08);
+}
+
+.action-icon-btn .material-symbols-outlined {
+  font-size: 18px;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
+/* ── Department / Designation create-edit modal ─────────────────────────── */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(12, 17, 10, 0.42);
+  backdrop-filter: blur(2px);
+  animation: modal-fade-in 0.18s ease-out;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 520px;
+  border: 1px solid #e2e6de;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgb(0 0 0 / 10%);
+  animation: modal-slide-up 0.2s ease-out;
+  overflow: hidden;
+}
+
+@keyframes modal-slide-up {
+  from { opacity: 0; transform: translateY(18px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px 14px;
+  border-bottom: 1px solid #edf0eb;
+  background: #fafbf9;
+}
+
+.modal-header > span {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 650;
+  color: #2a3828;
+}
+
+.modal-header > button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid #e3e7de;
+  border-radius: 7px;
+  color: #6b7268;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.modal-header > button:hover {
+  background: #eef5e7;
+  color: #2e3d28;
+}
+
+.modal-card .management-form-card {
+  max-width: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── */
+/* form alert / success reused across pages */
+.form-alert {
+  padding: 10px 13px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: 1px solid #f0cac9;
+  background: #fff5f4;
+  color: #943a35;
+  font-size: 9px;
+}
+
+.form-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 13px;
+  margin-bottom: 14px;
+  border-radius: 8px;
+  border: 1px solid #c0e8a6;
+  background: #f2faeb;
+  color: #3e7019;
+  font-size: 9px;
+}
+
+/* ── Organization Detail: Department / Designation quick-access cards ─────── */
+
+.org-detail-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1px solid #e2e6de;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgb(42 54 36 / 4%);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+}
+
+.org-detail-card:hover {
+  border-color: #a6ed63;
+  box-shadow: 0 6px 20px rgb(125 188 68 / 12%);
+  background: #fafef5;
+}
+
+.org-detail-card-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 10px;
+  color: #5f962e;
+  background: #eff9e7;
+}
+
+.org-detail-card > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.org-detail-card strong {
+  font-size: 11px;
+  color: #2a3828;
+}
+
+.org-detail-card span {
+  font-size: 9px;
+  color: #8c9289;
 }

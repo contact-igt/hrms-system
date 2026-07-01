@@ -7,7 +7,7 @@ import {
   platformUserRoles,
   roles,
   users,
-} from "../database/schema/index.js";
+} from "../database/index.js";
 import { passwordService } from "../modules/auth/password.service.js";
 
 if (!env.PLATFORM_ADMIN_EMAIL || !env.PLATFORM_ADMIN_PASSWORD) {

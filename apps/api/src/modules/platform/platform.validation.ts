@@ -13,24 +13,24 @@ const organizationBody = z.object({
 
 export const createOrganizationSchema = z.object({
   body: organizationBody,
-  params: z.object({}),
-  query: z.object({}),
+  params: z.any().optional(),
+  query: z.any().optional(),
 });
 
 export const organizationIdSchema = z.object({
-  body: z.object({}).passthrough(),
-  params: z.object({ id: z.uuid() }),
-  query: z.object({}),
+  body: z.any().optional(),
+  params: z.object({ id: z.string().min(1) }),
+  query: z.any().optional(),
 });
 
 export const updateOrganizationSchema = z.object({
   body: z.object({
     name: z.string().trim().min(2).max(180).optional(),
-    domain: z.string().trim().min(3).max(180).toLowerCase().optional(),
+    domain: z.string().trim().min(3).max(180).transform((value) => value.toLowerCase()).optional(),
     timezone: z.string().trim().min(2).max(80).optional(),
   }),
   params: z.object({ id: z.uuid() }),
-  query: z.object({}),
+  query: z.any().optional(),
 });
 
 export const updateOrganizationStatusSchema = z.object({
@@ -38,15 +38,15 @@ export const updateOrganizationStatusSchema = z.object({
     status: z.enum(["PENDING", "ACTIVE", "SUSPENDED", "ARCHIVED"]),
   }),
   params: z.object({ id: z.uuid() }),
-  query: z.object({}),
+  query: z.any().optional(),
 });
 
 export const inviteOrganizationAdminSchema = z.object({
   body: z.object({
-    firstName: z.string().trim().min(2).max(90),
-    lastName: z.string().trim().min(2).max(90),
-    email: z.email().transform((value) => value.trim().toLowerCase()),
+    firstName: z.string().trim().min(2).max(90).optional(),
+    lastName: z.string().trim().min(2).max(90).optional(),
+    email: z.string().email().transform((value) => value.trim().toLowerCase()).optional(),
   }),
   params: z.object({ id: z.uuid() }),
-  query: z.object({}),
+  query: z.any().optional(),
 });

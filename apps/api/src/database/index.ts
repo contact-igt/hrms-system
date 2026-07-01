@@ -6,6 +6,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  datetime,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -21,13 +22,14 @@ export const organizations = mysqlTable(
     domain: varchar("domain", { length: 180 }),
     timezone: varchar("timezone", { length: 80 }).notNull().default("Asia/Kolkata"),
     status: mysqlEnum("status", [
+      "NOT_INVITED",
       "PENDING",
       "ACTIVE",
       "SUSPENDED",
       "ARCHIVED",
     ])
       .notNull()
-      .default("PENDING"),
+      .default("NOT_INVITED"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
   },
@@ -57,13 +59,13 @@ export const users = mysqlTable(
     ])
       .notNull()
       .default("INVITED"),
-    emailVerifiedAt: timestamp("email_verified_at"),
-    passwordChangedAt: timestamp("password_changed_at"),
-    failedLoginAttempts: int("failed_login_attempts").notNull().default(0),
-    lockedUntil: timestamp("locked_until"),
-    lastLoginAt: timestamp("last_login_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+    emailVerifiedAt: datetime("email_verified_at"),
+    passwordChangedAt: datetime("password_changed_at"),
+    failedLoginAttempts: int("failed_login_attempts").notNull().default(0),
+    lockedUntil: datetime("locked_until"),
+    lastLoginAt: datetime("last_login_at"),
   },
   (table) => [
     uniqueIndex("users_email_unique").on(table.email),
@@ -157,6 +159,49 @@ export const membershipRoles = mysqlTable(
   (table) => [primaryKey({ columns: [table.membershipId, table.roleId] })],
 );
 
+export const departments = mysqlTable(
+  "departments",
+  {
+    id: id().primaryKey(),
+    organizationId: id("organization_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    name: varchar("name", { length: 120 }).notNull(),
+    code: varchar("code", { length: 30 }).notNull(),
+    description: varchar("description", { length: 255 }),
+    isActive: int("is_active").notNull().default(1),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+  },
+  (table) => [
+    uniqueIndex("departments_org_code_unique").on(table.organizationId, table.code),
+    index("departments_org_active_idx").on(table.organizationId, table.isActive),
+  ],
+);
+
+export const designations = mysqlTable(
+  "designations",
+  {
+    id: id().primaryKey(),
+    organizationId: id("organization_id")
+      .notNull()
+      .references(() => organizations.id, { onDelete: "cascade" }),
+    departmentId: id("department_id").references(() => departments.id, {
+      onDelete: "set null",
+    }),
+    title: varchar("title", { length: 120 }).notNull(),
+    level: int("level").notNull().default(1),
+    isActive: int("is_active").notNull().default(1),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow().onUpdateNow(),
+  },
+  (table) => [
+    uniqueIndex("designations_org_title_unique").on(table.organizationId, table.title),
+    index("designations_org_dept_idx").on(table.organizationId, table.departmentId),
+    index("designations_org_active_idx").on(table.organizationId, table.isActive),
+  ],
+);
+
 export const employees = mysqlTable(
   "employees",
   {
@@ -166,8 +211,12 @@ export const employees = mysqlTable(
       .references(() => organizations.id, { onDelete: "cascade" }),
     userId: id("user_id").references(() => users.id, { onDelete: "set null" }),
     employeeCode: varchar("employee_code", { length: 60 }).notNull(),
-    departmentId: varchar("department_id", { length: 36 }),
-    designationId: varchar("designation_id", { length: 36 }),
+    departmentId: id("department_id").references(() => departments.id, {
+      onDelete: "set null",
+    }),
+    designationId: id("designation_id").references(() => designations.id, {
+      onDelete: "set null",
+    }),
     status: mysqlEnum("status", [
       "DRAFT",
       "INVITED",
@@ -204,10 +253,10 @@ export const organizationInvitations = mysqlTable(
     departmentId: varchar("department_id", { length: 36 }),
     designationId: varchar("designation_id", { length: 36 }),
     tokenHash: varchar("token_hash", { length: 64 }).notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
-    acceptedAt: timestamp("accepted_at"),
-    invitedBy: id("invited_by").references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at").notNull().defaultNow(),
+    expiresAt: datetime("expires_at").notNull(),
+    acceptedAt: datetime("accepted_at"),
+    invitedBy: id("invited_by").references(() => users.id, { onDelete: "set null" }),
   },
   (table) => [
     uniqueIndex("invitations_token_hash_unique").on(table.tokenHash),
@@ -234,10 +283,10 @@ export const sessions = mysqlTable(
     refreshJti: varchar("refresh_jti", { length: 36 }).notNull(),
     userAgent: varchar("user_agent", { length: 500 }),
     ipAddress: varchar("ip_address", { length: 64 }),
-    expiresAt: timestamp("expires_at").notNull(),
-    lastUsedAt: timestamp("last_used_at"),
-    revokedAt: timestamp("revoked_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
+    expiresAt: datetime("expires_at").notNull(),
+    lastUsedAt: datetime("last_used_at"),
+    revokedAt: datetime("revoked_at"),
   },
   (table) => [
     index("sessions_user_idx").on(table.userId),
@@ -259,9 +308,9 @@ export const otpChallenges = mysqlTable(
     ]).notNull(),
     attempts: int("attempts").notNull().default(0),
     maxAttempts: int("max_attempts").notNull().default(5),
-    expiresAt: timestamp("expires_at").notNull(),
-    consumedAt: timestamp("consumed_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
+    expiresAt: datetime("expires_at").notNull(),
+    consumedAt: datetime("consumed_at"),
   },
   (table) => [
     index("otp_destination_purpose_idx").on(table.destination, table.purpose),
@@ -277,9 +326,9 @@ export const passwordResetTokens = mysqlTable(
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     tokenHash: varchar("token_hash", { length: 64 }).notNull(),
-    expiresAt: timestamp("expires_at").notNull(),
-    usedAt: timestamp("used_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
+    expiresAt: datetime("expires_at").notNull(),
+    usedAt: datetime("used_at"),
   },
   (table) => [
     uniqueIndex("reset_token_hash_unique").on(table.tokenHash),

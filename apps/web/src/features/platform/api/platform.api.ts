@@ -5,7 +5,7 @@ export type OrganizationRecord = {
   name: string;
   code: string;
   domain: string;
-  status: "PENDING" | "ACTIVE" | "SUSPENDED" | "ARCHIVED";
+  status: "NOT_INVITED" | "PENDING" | "ACTIVE" | "SUSPENDED" | "ARCHIVED";
   memberCount: number;
 };
 
@@ -47,14 +47,26 @@ export const platformApi = {
       accessToken,
     );
   },
-  inviteOrganizationAdmin(organizationId: string, admin: {firstName: string; lastName: string; email: string}, accessToken: string) {
-    return apiRequest<any>(
+
+  inviteOrganizationAdmin(organizationId: string, admin: {firstName: string; lastName: string; email: string} | undefined, accessToken: string) {
+    return apiRequest<unknown>(
       `/platform/organizations/${organizationId}/admin-invitations`,
       {
         method: "POST",
-        body: JSON.stringify(admin),
+        body: admin ? JSON.stringify(admin) : undefined,
+      },
+      accessToken,
+    );
+  },
+
+  deleteOrganization(id: string, accessToken: string) {
+    return apiRequest<void>(`/platform/organizations/${id}`,
+      {
+        method: "DELETE",
       },
       accessToken,
     );
   },
 };
+
+

@@ -61,7 +61,7 @@ export function LoginPage() {
       description="Enter your organization code and employee credentials."
       footer={
         <p>
-          Have an employee invitation? <Link to="/register">Activate account</Link>
+          Have an employee invitation? <Link to="/activate-account">Activate account</Link>
         </p>
       }
     >

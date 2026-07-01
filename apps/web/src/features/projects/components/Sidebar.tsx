@@ -21,8 +21,12 @@ import {
   SlidersHorizontal,
   UsersRound,
   Workflow,
+  Building2,
+  Briefcase,
+  Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 type SidebarProps = {
   collapsed: boolean;
@@ -33,6 +37,7 @@ type NavItem = {
   label: string;
   icon: LucideIcon;
   active?: boolean;
+  to?: string;
 };
 
 const sections: { label: string; items: NavItem[] }[] = [
@@ -41,6 +46,9 @@ const sections: { label: string; items: NavItem[] }[] = [
     items: [
       { label: "Dashboard", icon: LayoutDashboard },
       { label: "Project", icon: FolderKanban, active: true },
+      { label: "Departments", icon: Building2, to: "/organization/departments" },
+      { label: "Designations", icon: Briefcase, to: "/organization/designations" },
+      { label: "Employees", icon: Users, to: "/organization/employees" },
       { label: "Time Tracker", icon: Clock3 },
       { label: "Growth Stats", icon: Gauge },
       { label: "Inventory", icon: Box },
@@ -102,17 +110,33 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
         {sections.map((section) => (
           <div className="sidebar-section" key={section.label}>
             <p className="section-label">{section.label}</p>
-            {section.items.map(({ label, icon: Icon, active }) => (
-              <button
-                className={`nav-item ${active ? "active" : ""}`}
-                type="button"
-                key={label}
-                title={collapsed ? label : undefined}
-              >
-                <Icon className="nav-item-icon" size={18} strokeWidth={1.7} />
-                <span>{label}</span>
-              </button>
-            ))}
+            {section.items.map(({ label, icon: Icon, active, to }) => {
+              if (to) {
+                return (
+                  <NavLink
+                    className={({ isActive }) => `nav-item ${isActive || active ? "active" : ""}`}
+                    to={to}
+                    key={label}
+                    title={collapsed ? label : undefined}
+                  >
+                    <Icon className="nav-item-icon" size={18} strokeWidth={1.7} />
+                    <span>{label}</span>
+                  </NavLink>
+                );
+              }
+
+              return (
+                <button
+                  className={`nav-item ${active ? "active" : ""}`}
+                  type="button"
+                  key={label}
+                  title={collapsed ? label : undefined}
+                >
+                  <Icon className="nav-item-icon" size={18} strokeWidth={1.7} />
+                  <span>{label}</span>
+                </button>
+              );
+            })}
           </div>
         ))}
       </nav>

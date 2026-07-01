@@ -14,6 +14,7 @@ import {
   registerSchema,
   resetPasswordSchema,
   verifyResetOtpSchema,
+  getInvitationSchema,
 } from "./auth.validation.js";
 
 const sensitiveLimit = rateLimit({
@@ -84,6 +85,12 @@ authRouter.post(
   sensitiveLimit,
   validate(resetPasswordSchema),
   authController.resetPassword,
+);
+authRouter.get(
+  "/invitations/:token",
+  sensitiveLimit,
+  validate(getInvitationSchema),
+  authController.getInvitation,
 );
 authRouter.post("/refresh", sensitiveLimit, authController.refresh);
 authRouter.post("/logout", authController.logout);

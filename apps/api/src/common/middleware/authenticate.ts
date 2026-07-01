@@ -7,7 +7,7 @@ import {
   organizations,
   sessions,
   users,
-} from "../../database/schema/index.js";
+} from "../../database/index.js";
 import { getMembershipAccess, getPlatformAccess } from "../../modules/auth/role.service.js";
 import { verifyAccessToken } from "../../modules/auth/token.service.js";
 

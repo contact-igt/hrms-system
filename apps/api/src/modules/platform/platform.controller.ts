@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import { sendSuccess } from "../../common/utils/response.js";
 import {
   createOrganization,
+  deleteOrganization,
   getOrganization,
   inviteOrganizationAdmin,
   listOrganizations,
@@ -55,4 +56,11 @@ export const platformController = {
       201,
     );
   },
+
+  async delete(request: Request, response: Response) {
+    await deleteOrganization(request.params.id as string, request);
+    sendSuccess(response, { message: "Organization deleted" });
+  },
 };
+
+

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Organization Invitation</title>
+  <style>
+    body {font-family: Arial, sans-serif; line-height: 1.5; padding: 20px;}
+    .container {max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 8px;}
+    h1 {color: #333;}
+    a.button {display: inline-block; padding: 10px 20px; background: #0066cc; color: #fff; text-decoration: none; border-radius: 4px;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Invitation to join {{organizationName}}</h1>
+    <p>You have been invited to join <strong>{{organizationName}}</strong> on Orbix HRMS.</p>
+    <p>Click the button below to activate your account:</p>
+    <p><a href="{{invitationLink}}" class="button">Accept Invitation</a></p>
+    <p>If the button does not work, copy and paste the following token into the registration page:</p>
+    <pre>{{invitationToken}}</pre>
+    <p>This invitation will expire in {{invitationExpiry}} days.</p>
+  </div>
+</body>
+</html>

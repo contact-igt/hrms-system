@@ -8,6 +8,7 @@ import { requestId } from "./common/middleware/request-id.js";
 import { sendSuccess } from "./common/utils/response.js";
 import { env } from "./config/env.js";
 import { authRouter } from "./modules/auth/auth.routes.js";
+import { departmentRouter, designationRouter } from "./modules/departments/department.routes.js";
 import { employeeRouter } from "./modules/employees/employee.routes.js";
 import { organizationRouter } from "./modules/organizations/organization.routes.js";
 import { platformRouter } from "./modules/platform/platform.routes.js";
@@ -47,6 +48,8 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/platform", platformRouter);
 app.use("/api/v1/organization", organizationRouter);
 app.use("/api/v1/employees", employeeRouter);
+app.use("/api/v1/departments", departmentRouter);
+app.use("/api/v1/designations", designationRouter);
 
 app.get("/api/v1/auth/sso/:provider/start", (request, response) => {
   response.status(501).json({

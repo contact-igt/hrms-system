@@ -6,7 +6,7 @@ import {
   organizationInvitations,
   organizationMemberships,
   organizations,
-} from "../../database/schema/index.js";
+} from "../../database/index.js";
 import { AppError } from "../../common/errors/app-error.js";
 import { createId, createRandomToken, sha256 } from "../../common/utils/crypto.js";
 import { addDays } from "../../common/utils/date.js";
@@ -24,6 +24,7 @@ async function createAdminInvitation(
   organization: { id: string; name: string },
   admin: AdminInput,
   actorUserId: string,
+  sendEmail = true,
 ) {
   const roleId = await findRoleId("ORGANIZATION_ADMIN", "ORGANIZATION");
   if (!roleId) {
@@ -55,11 +56,13 @@ async function createAdminInvitation(
     invitedBy: actorUserId,
   });
 
-  await mailService.sendInvitation(
-    admin.email,
-    organization.name,
-    invitationToken,
-  );
+  if (sendEmail) {
+    await mailService.sendInvitation(
+      admin.email,
+      organization.name,
+      invitationToken,
+    );
+  }
   return invitationId;
 }
 
@@ -117,7 +120,7 @@ export async function createOrganization(
     name: body.name,
     code: body.code,
     domain: body.domain,
-    status: "PENDING",
+    status: "NOT_INVITED",
   });
 
   try {
@@ -125,6 +128,7 @@ export async function createOrganization(
       { id: organizationId, name: body.name },
       body.admin,
       request.auth!.userId,
+      false,
     );
   } catch (error) {
     await db.delete(organizations).where(eq(organizations.id, organizationId));
@@ -145,7 +149,7 @@ export async function createOrganization(
     name: body.name,
     code: body.code,
     domain: body.domain,
-    status: "PENDING" as const,
+    status: "NOT_INVITED" as const,
     memberCount: 0,
   };
 }
@@ -193,15 +197,73 @@ export async function updateOrganizationStatus(
 
 export async function inviteOrganizationAdmin(
   id: string,
-  body: AdminInput,
+  body: Partial<AdminInput> | undefined,
   request: Request,
 ) {
   const organization = await getOrganization(id);
-  const invitationId = await createAdminInvitation(
-    organization,
-    body,
-    request.auth!.userId,
-  );
+
+  // Try to find an existing invitation record
+  const [existingInvitation] = await db
+    .select()
+    .from(organizationInvitations)
+    .where(
+      and(
+        eq(organizationInvitations.organizationId, id),
+        isNull(organizationInvitations.acceptedAt),
+      ),
+    )
+    .limit(1);
+
+  let invitationId: string;
+  const invitationToken = createRandomToken();
+  const tokenHash = sha256(invitationToken);
+  const expiresAt = addDays(new Date(), env.INVITATION_EXPIRES_IN_DAYS);
+
+  if (existingInvitation) {
+    invitationId = existingInvitation.id;
+    // Update existing invitation
+    const email = body?.email ?? existingInvitation.email;
+    const firstName = body?.firstName ?? existingInvitation.firstName;
+    const lastName = body?.lastName ?? existingInvitation.lastName;
+
+    await db
+      .update(organizationInvitations)
+      .set({
+        firstName,
+        lastName,
+        email,
+        tokenHash,
+        expiresAt,
+        invitedBy: request.auth!.userId,
+      })
+      .where(eq(organizationInvitations.id, invitationId));
+
+    await mailService.sendInvitation(
+      email,
+      organization.name,
+      invitationToken,
+    );
+  } else {
+    // If no existing invitation, we require admin details in the request body
+    if (!body?.email || !body?.firstName || !body?.lastName) {
+      throw new AppError(400, "Administrator details are required to send an invitation.", "ADMIN_DETAILS_REQUIRED");
+    }
+    invitationId = await createAdminInvitation(
+      organization,
+      {
+        firstName: body.firstName,
+        lastName: body.lastName,
+        email: body.email,
+      },
+      request.auth!.userId,
+    );
+  }
+
+  await db
+    .update(organizations)
+    .set({ status: "PENDING", updatedAt: new Date() })
+    .where(eq(organizations.id, id));
+
   await writeAudit({
     action: "PLATFORM_ORGANIZATION_ADMIN_INVITED",
     organizationId: id,
@@ -211,4 +273,17 @@ export async function inviteOrganizationAdmin(
     request,
   });
   return { invitationId };
+}
+
+export async function deleteOrganization(id: string, request: Request) {
+  const organization = await getOrganization(id);
+  await db.delete(organizations).where(eq(organizations.id, id));
+  await writeAudit({
+    action: "PLATFORM_ORGANIZATION_DELETED",
+    entityType: "Organization",
+    entityId: id,
+    actorUserId: request.auth!.userId,
+    request,
+    metadata: { name: organization.name, code: organization.code },
+  });
 }

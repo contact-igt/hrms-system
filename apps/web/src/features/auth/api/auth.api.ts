@@ -12,11 +12,17 @@ const API_BASE_URL = import.meta.env.VITE_API_URL ?? "/api/v1";
 
 export class ApiError extends Error {
   code?: string;
+  errors?: Array<{ field: string; message: string }>;
 
-  constructor(message: string, code?: string) {
+  constructor(
+    message: string,
+    code?: string,
+    errors?: Array<{ field: string; message: string }>,
+  ) {
     super(message);
     this.name = "ApiError";
     this.code = code;
+    this.errors = errors;
   }
 }
 
@@ -44,7 +50,12 @@ export async function apiRequest<T>(
   }))) as ApiSuccess<T> | ApiFailure;
 
   if (!response.ok || !payload.success) {
-    throw new ApiError(payload.message, "code" in payload ? payload.code : undefined);
+    const failure = payload as import("../types/auth.types").ApiFailure;
+    throw new ApiError(
+      failure.message,
+      "code" in failure ? failure.code : undefined,
+      "errors" in failure ? failure.errors : undefined,
+    );
   }
 
   return payload.data;
@@ -70,6 +81,13 @@ export const authApi = {
       method: "POST",
       body: JSON.stringify(input),
     });
+  },
+
+  getInvitation(token: string) {
+    return apiRequest<{ firstName: string; lastName: string; email: string; organizationCode: string }>(
+      `/auth/invitations/${encodeURIComponent(token)}`,
+      { method: "GET" },
+    );
   },
 
   verifyOtp(input: {

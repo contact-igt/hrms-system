@@ -1,4 +1,5 @@
 import {
+  Briefcase,
   Building2,
   ChevronDown,
   FolderKanban,
@@ -7,6 +8,14 @@ import {
   Settings2,
   ShieldCheck,
   UsersRound,
+  Users,
+  Clock,
+  TrendingUp,
+  Package,
+  Filter,
+  Globe,
+  DollarSign,
+  Image,
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
@@ -39,17 +48,19 @@ export function ManagementShell({
         },
       ]
     : [
-        { to: "/projects", label: "Projects", icon: FolderKanban },
-        {
-          to: "/organization/employees",
-          label: "Employees",
-          icon: UsersRound,
-        },
-        {
-          to: "/organization/setup",
-          label: "Organization setup",
-          icon: Settings2,
-        },
+        { to: "/organization/dashboard", label: "Dashboard", icon: LayoutDashboard },
+        { to: "/projects", label: "Project", icon: FolderKanban },
+        { to: "/organization/departments", label: "Departments", icon: Building2 },
+        { to: "/organization/designations", label: "Designations", icon: Briefcase },
+        { to: "/organization/employees", label: "Employees", icon: Users },
+        { to: "/organization/time-tracker", label: "Time Tracker", icon: Clock },
+        { to: "/organization/growth-stats", label: "Growth Stats", icon: TrendingUp },
+        { to: "/organization/inventory", label: "Inventory", icon: Package },
+        { to: "/organization/client-pipeline", label: "Client Pipeline", icon: Filter },
+        { to: "/organization/team", label: "Team", icon: UsersRound },
+        { to: "/organization/client-portal", label: "Client Portal", icon: Globe },
+        { to: "/organization/financial", label: "Financial", icon: DollarSign },
+        { to: "/organization/portfolio", label: "Portfolio", icon: Image },
       ];
 
   return (
@@ -78,10 +89,12 @@ export function ManagementShell({
         </div>
 
         <nav>
-          <p>WORKSPACE</p>
-          <NavLink to={platform ? "/platform/organizations" : "/projects"} end>
-            <LayoutDashboard size={17} /> Overview
-          </NavLink>
+          <p>{platform ? "WORKSPACE" : "MANAGEMENT"}</p>
+          {platform && (
+            <NavLink to="/platform/organizations" end>
+              <LayoutDashboard size={17} /> Overview
+            </NavLink>
+          )}
           {navItems.map(({ to, label, icon: Icon }) => (
             <NavLink to={to} key={to}>
               <Icon size={17} /> {label}

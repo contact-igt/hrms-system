@@ -9,8 +9,8 @@ config({ path: resolve(apiRoot, ".env"), quiet: true });
 
 export default defineConfig({
   dialect: "mysql",
-  schema: portablePath(resolve(apiRoot, "src/database/schema/index.ts")),
-  out: portablePath(resolve(apiRoot, "drizzle")),
+  schema: "./src/database/index.ts",
+  out: "./drizzle",
   dbCredentials: {
     url:
       process.env.DATABASE_URL ??

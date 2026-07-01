@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import type { Request } from "express";
 import { env } from "../../config/env.js";
 import { db } from "../../database/client.js";
@@ -10,7 +10,7 @@ import {
   organizations,
   roles,
   users,
-} from "../../database/schema/index.js";
+} from "../../database/index.js";
 import { AppError } from "../../common/errors/app-error.js";
 import { createId, createRandomToken, sha256 } from "../../common/utils/crypto.js";
 import { addDays } from "../../common/utils/date.js";
@@ -60,7 +60,7 @@ export async function updateCurrentOrganization(
 
 export async function listMembers(request: Request) {
   const organizationId = organizationIdFrom(request);
-  const rows = await db
+  const memberRows = await db
     .select({
       id: organizationMemberships.id,
       employeeCode: employees.employeeCode,
@@ -80,8 +80,8 @@ export async function listMembers(request: Request) {
     )
     .where(eq(organizationMemberships.organizationId, organizationId));
 
-  return Promise.all(
-    rows.map(async (row) => {
+  const activeMembers = await Promise.all(
+    memberRows.map(async (row) => {
       const roleRows = await db
         .select({ name: roles.name })
         .from(membershipRoles)
@@ -97,6 +97,41 @@ export async function listMembers(request: Request) {
       };
     }),
   );
+
+  const invitedRows = await db
+    .select({
+      id: organizationInvitations.id,
+      employeeCode: employees.employeeCode,
+      firstName: organizationInvitations.firstName,
+      lastName: organizationInvitations.lastName,
+      email: organizationInvitations.email,
+      role: organizationInvitations.roleName,
+    })
+    .from(organizationInvitations)
+    .innerJoin(
+      employees,
+      and(
+        eq(employees.organizationId, organizationInvitations.organizationId),
+        eq(employees.employeeCode, organizationInvitations.employeeCode),
+      )
+    )
+    .where(
+      and(
+        eq(organizationInvitations.organizationId, organizationId),
+        isNull(organizationInvitations.acceptedAt)
+      )
+    );
+
+  const invitedMembers = invitedRows.map((row) => ({
+    id: row.id,
+    employeeCode: row.employeeCode ?? "—",
+    name: `${row.firstName} ${row.lastName}`,
+    email: row.email,
+    role: row.role,
+    status: "INVITED" as const,
+  }));
+
+  return [...activeMembers, ...invitedMembers];
 }
 
 export async function inviteEmployee(

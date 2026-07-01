@@ -43,10 +43,10 @@ CREATE TABLE `organization_invitations` (
 	`department_id` varchar(36),
 	`designation_id` varchar(36),
 	`token_hash` varchar(64) NOT NULL,
-	`expires_at` timestamp NOT NULL,
-	`accepted_at` timestamp,
-	`invited_by` varchar(36),
 	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`expires_at` datetime NOT NULL,
+	`accepted_at` datetime,
+	`invited_by` varchar(36),
 	CONSTRAINT `organization_invitations_id` PRIMARY KEY(`id`),
 	CONSTRAINT `invitations_token_hash_unique` UNIQUE(`token_hash`)
 );
@@ -84,9 +84,9 @@ CREATE TABLE `otp_challenges` (
 	`purpose` enum('EMAIL_VERIFICATION','LOGIN','PASSWORD_RESET') NOT NULL,
 	`attempts` int NOT NULL DEFAULT 0,
 	`max_attempts` int NOT NULL DEFAULT 5,
-	`expires_at` timestamp NOT NULL,
-	`consumed_at` timestamp,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`expires_at` datetime NOT NULL,
+	`consumed_at` datetime,
 	CONSTRAINT `otp_challenges_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
@@ -94,9 +94,9 @@ CREATE TABLE `password_reset_tokens` (
 	`id` varchar(36) NOT NULL,
 	`user_id` varchar(36) NOT NULL,
 	`token_hash` varchar(64) NOT NULL,
-	`expires_at` timestamp NOT NULL,
-	`used_at` timestamp,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`expires_at` datetime NOT NULL,
+	`used_at` datetime,
 	CONSTRAINT `password_reset_tokens_id` PRIMARY KEY(`id`),
 	CONSTRAINT `reset_token_hash_unique` UNIQUE(`token_hash`)
 );
@@ -141,10 +141,10 @@ CREATE TABLE `sessions` (
 	`refresh_jti` varchar(36) NOT NULL,
 	`user_agent` varchar(500),
 	`ip_address` varchar(64),
-	`expires_at` timestamp NOT NULL,
-	`last_used_at` timestamp,
-	`revoked_at` timestamp,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`expires_at` datetime NOT NULL,
+	`last_used_at` datetime,
+	`revoked_at` datetime,
 	CONSTRAINT `sessions_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
@@ -155,13 +155,13 @@ CREATE TABLE `users` (
 	`email` varchar(190) NOT NULL,
 	`password_hash` varchar(255),
 	`status` enum('INVITED','PENDING_VERIFICATION','PENDING_APPROVAL','ACTIVE','LOCKED','SUSPENDED','DISABLED') NOT NULL DEFAULT 'INVITED',
-	`email_verified_at` timestamp,
-	`password_changed_at` timestamp,
-	`failed_login_attempts` int NOT NULL DEFAULT 0,
-	`locked_until` timestamp,
-	`last_login_at` timestamp,
 	`created_at` timestamp NOT NULL DEFAULT (now()),
 	`updated_at` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	`email_verified_at` datetime,
+	`password_changed_at` datetime,
+	`failed_login_attempts` int NOT NULL DEFAULT 0,
+	`locked_until` datetime,
+	`last_login_at` datetime,
 	CONSTRAINT `users_id` PRIMARY KEY(`id`),
 	CONSTRAINT `users_email_unique` UNIQUE(`email`)
 );

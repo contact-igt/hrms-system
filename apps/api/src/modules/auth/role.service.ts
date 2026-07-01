@@ -6,7 +6,7 @@ import {
   platformUserRoles,
   rolePermissions,
   roles,
-} from "../../database/schema/index.js";
+} from "../../database/index.js";
 
 async function loadRoleDetails(roleIds: string[]) {
   if (roleIds.length === 0) {

@@ -52,3 +52,9 @@ platformRouter.post(
   validate(inviteOrganizationAdminSchema),
   platformController.inviteAdmin,
 );
+platformRouter.delete(
+  "/organizations/:id",
+  requirePermission("platform.organization.delete"),
+  validate(organizationIdSchema),
+  platformController.delete,
+);

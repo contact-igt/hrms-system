@@ -96,3 +96,9 @@ export const otpLoginVerifySchema = z.object({
   params: z.object({}),
   query: z.object({}),
 });
+
+export const getInvitationSchema = z.object({
+  body: z.any(),
+  params: z.object({ token: z.string().min(1) }),
+  query: z.object({}),
+});

@@ -3,7 +3,7 @@ import jwt, { type JwtPayload, type SignOptions } from "jsonwebtoken";
 import { and, eq, isNull } from "drizzle-orm";
 import { env } from "../../config/env.js";
 import { db } from "../../database/client.js";
-import { sessions } from "../../database/schema/index.js";
+import { sessions } from "../../database/index.js";
 import { AppError } from "../../common/errors/app-error.js";
 import { createId, sha256 } from "../../common/utils/crypto.js";
 import { durationToMilliseconds } from "../../common/utils/date.js";

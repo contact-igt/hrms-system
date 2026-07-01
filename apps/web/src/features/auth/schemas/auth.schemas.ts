@@ -34,6 +34,25 @@ export const registerSchema = z
     message: "Passwords do not match.",
   });
 
+// ---- Step 1: Check Your Account ----
+export const checkAccountSchema = z.object({
+  firstName: z.string().trim().min(2, "Enter your first name."),
+  lastName: z.string().trim().min(2, "Enter your last name."),
+  email: z.email("Enter a valid work email."),
+  companyCode: z.string().trim().min(20, "Paste the full invitation token from your email (at least 20 characters)."),
+});
+
+// ---- Step 2: Setup Account Password ----
+export const setupPasswordSchema = z
+  .object({
+    password: passwordSchema,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Passwords do not match.",
+  });
+
 export const forgotPasswordSchema = z.object({
   email: z.email("Enter a valid work email."),
 });
@@ -55,6 +74,9 @@ export const otpSchema = z.object({
 export type LoginFormValues = z.infer<typeof loginSchema>;
 export type PlatformLoginFormValues = z.infer<typeof platformLoginSchema>;
 export type RegisterFormValues = z.infer<typeof registerSchema>;
+export type CheckAccountFormValues = z.infer<typeof checkAccountSchema>;
+export type SetupPasswordFormValues = z.infer<typeof setupPasswordSchema>;
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 export type OtpFormValues = z.infer<typeof otpSchema>;
+

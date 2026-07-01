@@ -1,6 +1,6 @@
 import type { Request } from "express";
 import { db } from "../../database/client.js";
-import { auditLogs } from "../../database/schema/index.js";
+import { auditLogs } from "../../database/index.js";
 import { createId } from "../../common/utils/crypto.js";
 
 type AuditInput = {

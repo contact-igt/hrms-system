@@ -44,13 +44,17 @@ export const mailService = {
     organizationName: string,
     invitationToken: string,
   ) {
-    const link = `${env.WEB_URL}/register?invitation=${encodeURIComponent(
+    const link = `${env.WEB_URL}/activate-account/${encodeURIComponent(
       invitationToken,
     )}`;
-    return send(
-      to,
-      `You are invited to ${organizationName}`,
-      `Activate your Orbix HRMS account using this link: ${link}`,
-    );
+    const subject = `Invitation to join ${organizationName} on Orbix HRMS`;
+    const body = `You have been invited to join ${organizationName}.
+
+Click the link below to activate your account:
+${link}
+
+This invitation will expire in ${env.INVITATION_EXPIRES_IN_DAYS || 7} days.`;
+
+    return send(to, subject, body);
   },
 };

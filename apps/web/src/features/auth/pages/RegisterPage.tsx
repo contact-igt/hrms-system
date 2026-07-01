@@ -54,14 +54,14 @@ export function RegisterPage() {
 
   return (
     <AuthLayout
-      eyebrow="Employee activation"
+      eyebrow="Organization activation"
       title="Create your account"
-      description="Use the invitation sent by your organization administrator."
-      footer={
-        <p>
-          Already activated? <Link to="/login">Sign in</Link>
-        </p>
-      }
+      description="Complete Your Orbix HRMS Account Setup"
+      // footer={
+      //   <p>
+      //     Already activated? <Link to="/login">Sign in</Link>
+      //   </p>
+      // }
     >
       <form className="auth-form" onSubmit={submit}>
         {serverError && <div className="form-alert">{serverError}</div>}

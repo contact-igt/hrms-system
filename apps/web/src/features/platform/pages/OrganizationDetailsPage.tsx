@@ -9,7 +9,6 @@ export function OrganizationDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   if (!id) {
-    // If no ID in the URL, go back to the list view.
     navigate("/platform/organizations");
     return null;
   }
@@ -34,9 +33,7 @@ export function OrganizationDetailsPage() {
         if (active) setLoading(false);
       });
 
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, [accessToken, id]);
 
   return (
@@ -61,7 +58,6 @@ export function OrganizationDetailsPage() {
               <span>General details about the organization.</span>
             </div>
           </div>
-          
           <div className="management-form-grid" style={{ marginBottom: "20px" }}>
             <label className="full">
               <span>Organization name</span>
@@ -93,3 +89,4 @@ export function OrganizationDetailsPage() {
     </ManagementShell>
   );
 }
+

@@ -11,7 +11,7 @@ import {
   passwordResetTokens,
   sessions,
   users,
-} from "../../database/schema/index.js";
+} from "../../database/index.js";
 import { AppError } from "../../common/errors/app-error.js";
 import {
   createId,
@@ -648,10 +648,19 @@ export async function refreshSession(
   response: Response,
 ) {
   if (!rawRefreshToken) {
-    throw new AppError(401, "Refresh cookie is missing.", "AUTH_REQUIRED");
+    return null;
   }
 
-  const rotated = await rotateRefreshToken(rawRefreshToken);
+  let rotated;
+  try {
+    rotated = await rotateRefreshToken(rawRefreshToken);
+  } catch (error) {
+    if (error instanceof AppError && error.statusCode === 401) {
+      return null;
+    }
+    throw error;
+  }
+
   const scope: SessionScope = {
     scopeType: rotated.session.scopeType,
     ...(rotated.session.organizationId
@@ -669,7 +678,7 @@ export async function refreshSession(
     .limit(1);
   if (!user || user.status !== "ACTIVE") {
     await revokeSession(rotated.session.id);
-    throw new AppError(403, "Account is not active.", "AUTH_ACCOUNT_UNAVAILABLE");
+    return null;
   }
 
   if (scope.scopeType === "ORGANIZATION") {
@@ -691,7 +700,7 @@ export async function refreshSession(
       membership.organizationStatus !== "ACTIVE"
     ) {
       await revokeSession(rotated.session.id);
-      throw new AppError(403, "Organization access is not active.");
+      return null;
     }
   }
 
@@ -723,6 +732,46 @@ export async function logoutAll(userId: string, response: Response) {
   await revokeAllUserSessions(userId);
   clearRefreshCookie(response);
   return { completed: true as const };
+}
+
+export async function getInvitationByToken(token: string) {
+  const tokenHash = sha256(token);
+  const [invitation] = await db
+    .select({
+      id: organizationInvitations.id,
+      organizationId: organizationInvitations.organizationId,
+      firstName: organizationInvitations.firstName,
+      lastName: organizationInvitations.lastName,
+      email: organizationInvitations.email,
+      roleName: organizationInvitations.roleName,
+      expiresAt: organizationInvitations.expiresAt,
+      acceptedAt: organizationInvitations.acceptedAt,
+      organizationStatus: organizations.status,
+      organizationCode: organizations.code,
+    })
+    .from(organizationInvitations)
+    .innerJoin(
+      organizations,
+      eq(organizationInvitations.organizationId, organizations.id),
+    )
+    .where(eq(organizationInvitations.tokenHash, tokenHash))
+    .limit(1);
+
+  if (
+    !invitation ||
+    invitation.acceptedAt ||
+    invitation.expiresAt <= new Date() ||
+    !["PENDING", "ACTIVE"].includes(invitation.organizationStatus)
+  ) {
+    throw new AppError(400, "Invitation is invalid or expired.", "AUTH_INVITATION_INVALID");
+  }
+
+  return {
+    firstName: invitation.firstName,
+    lastName: invitation.lastName,
+    email: invitation.email,
+    organizationCode: invitation.organizationCode,
+  };
 }
 
 export { resendOtpChallenge };

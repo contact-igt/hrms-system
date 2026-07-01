@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import type { RowDataPacket } from "mysql2";
 import { env } from "../config/env.js";
-import * as schema from "./schema/index.js";
+import * as schema from "./index.js";
 
 export const pool = mysql.createPool({
   uri: env.DATABASE_URL,
